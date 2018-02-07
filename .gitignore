@@ -99,7 +99,7 @@ ENV/
 
 # ROKN
 .idea/
-A
-.idea/
+client_secret*
+
 # mypy
 .mypy_cache/
