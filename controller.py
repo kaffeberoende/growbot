@@ -1,26 +1,22 @@
-import RPi.GPIO as GPIO
-import time
+import pifaceio, time
 
-hum_sense_list = [7, 8]
+hum_sense_list = [0, 1, 2, 3]
 pump_list = [15, 16]
-
-def setup():
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(hum_sense_list, GPIO.IN)
-    GPIO.setup(pump_list, GPIO.OUT)
-
+pf = pifaceio.PiFace()
 
 def get_humidity():
+    state = []
     for sensor in hum_sense_list:
-        state = []
-        state.append(GPIO.input(sensor))
-    print ("sensor " + sensor + " is " + state)
-    return state
+        state.append(pf.read_pin(sensor))
+        print("reading sensor ", sensor)
+        print("general state: ", pf.read())
+    return state;
 
 def pump_all():
     for pump in pump_list:
-        GPIO.output(pump, GPIO.HIGH)
+        pf.write_pin(pump, 1)
         print ("pumping " + pump)
         time.sleep(3)
         print ("stopping " + pump)
+        pf.write(pump, 0)
     return
