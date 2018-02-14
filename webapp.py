@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/growbot')
 def index():
-    humidity = controller.get_humidity();
+    humidity = controller.get_moisture_readings();
     return render_template('index.html', text="G R O W B O T", humidity=humidity)
 
 
