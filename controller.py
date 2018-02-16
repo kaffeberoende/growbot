@@ -16,20 +16,25 @@ state = []
 def get_moisture_readings():
     # enable sensors before reading values
     pf.write_pin(enable_sensors, 1)
+    pf.write()
+    pf.read()
     for sensor in moisture_sensor_list:
         state.append(pf.read_pin(sensor))
         print("reading sensor ", sensor)
         print("general state: ", pf.read())
     # disable sensors when done
     pf.write_pin(enable_sensors, 0)
+    pf.write()
     return state;
 
-
+# run the pumps in sequence
 def pump_all():
     for pump in pump_list:
         pf.write_pin(pump, 1)
+        pf.write()
         print ("pumping " + pump)
         time.sleep(3)
         print ("stopping " + pump)
         pf.write(pump, 0)
+        pf.write()
     return
