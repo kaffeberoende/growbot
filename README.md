@@ -1,4 +1,15 @@
 # growbot
-Odlingssystem för balkongväxter
 
-Ska bli python kod som kör en liten webserver, läser av fukt- och temperatursensorer och styr vattning med pumpar.
+Plant watering system based on Raspberry Pi, PiFace2 and soil moisture sensors.
+
+Hardware:
+  * Raspberry Pi 3 model b
+  * PiFace input/output card with two relays
+  * 6 * digital soil moisture sensors
+  * TOBD: two pumps
+
+Software:
+  * Python web server
+  * Python io logic
+  * REST API for mobile client
+  * Client for Android
