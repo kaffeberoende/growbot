@@ -9,25 +9,21 @@ pump_list = [0, 1]
 
 pf = pifaceio.PiFace()
 
-# state holds the last readings from the moisture sensors
-state = []
-
 # get the readings from all connected moisture sensors
 def get_moisture_readings():
-    localstate = []
+    state = []
     # enable sensors before reading values
     pf.write_pin(enable_sensors, 1)
     pf.write()
     pf.read()
     for sensor in moisture_sensor_list:
-        localstate.append(pf.read_pin(sensor))
+        state.append(pf.read_pin(sensor))
         print("reading sensor ", sensor)
         print("general state: ", pf.read())
     # disable sensors when done
     pf.write_pin(enable_sensors, 0)
     pf.write()
-    state = localstate
-    return localstate;
+    return state;
 
 # run the pumps in sequence
 def pump_all():

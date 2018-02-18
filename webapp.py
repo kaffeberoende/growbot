@@ -1,14 +1,19 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
-import controller as controller
-
+import iocontroller
+import weathercontroller
 app = Flask(__name__)
 
 
-@app.route('/growbot')
+@app.route('/growbot', methods=['GET', 'POST'])
 def index():
-    humidity = controller.get_moisture_readings();
-    return render_template('index.html', text="G R O W B O T", humidity=humidity)
+    humidity = iocontroller.get_moisture_readings()
+    if request.method == 'POST':
+        iocontroller.pump_all()
+
+    temperature = weathercontroller.get_current_temp()
+    return render_template('index.html', text="G R O W B O T", humidity=humidity, temp=temperature[1],
+                       city=temperature[0], temptime=temperature[2])
 
 
 if __name__ == '__main__':
