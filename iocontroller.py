@@ -30,9 +30,9 @@ def pump_all():
     for pump in pump_list:
         pf.write_pin(pump, 1)
         pf.write()
-        print ("pumping " + pump)
+        print ("pumping ")
         time.sleep(3)
-        print ("stopping " + pump)
-        pf.write(pump, 0)
+        print ("stopping ")
+        pf.write_pin(pump, 0)
         pf.write()
     return

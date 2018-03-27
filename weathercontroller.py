@@ -6,7 +6,7 @@ import requests, json, datetime
 # Lund Lth 53440
 # Malmoe: 52350
 base_url = "https://opendata-download-metobs.smhi.se/api/version/latest/"
-rest_url = "parameter/1/station/53430/period/latest-day/data.json"
+rest_url = "parameter/1/station/52350/period/latest-day/data.json"
 
 headers = {
     'Cache-Control': "no-cache",
@@ -15,7 +15,7 @@ headers = {
 
 def get_current_temp():
     response = requests.request("GET", base_url + rest_url, headers=headers)
-    print(response.text)
+   # print(response.text)
     parsed_response = json.loads(response.text)
     values = parsed_response["value"]
 
