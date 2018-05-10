@@ -33,14 +33,31 @@ def get_moisture_readings():
     return state
 
 
+# run one specific pump
+def pump(pump_id):
+    pump_id_int = int(pump_id)
+    if pump_id_int in pump_list:
+        pf.write_pin(pump_id_int, 1)
+        pf.write()
+        print ("pumping " + pump_id)
+        time.sleep(3)
+        print ("stopping " + pump_id)
+        pf.write_pin(pump_id_int, 0)
+        pf.write()
+        logcontroller.append_row(pumped,  pump_id_int)
+        return 1
+    else:
+        print "No pump with id: " + pump_id
+        return -1
+
 # run the pumps in sequence
 def pump_all():
     for pump in pump_list:
         pf.write_pin(pump, 1)
         pf.write()
-        print ("pumping ")
+        print ("pumping " + str(pump))
         time.sleep(3)
-        print ("stopping ")
+        print ("stopping " + str(pump))
         pf.write_pin(pump, 0)
         pf.write()
         logcontroller.append_row(pumped,  pump)
