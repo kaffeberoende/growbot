@@ -21,12 +21,14 @@ def index():
 def get_logs():
     start = request.args.get('start', 0, type=int)
     end = request.args.get('end', 0, type=int)
+    event_type = request.args.get("type", None)
     print start
     print end
-    if start != 0 and end != 0 :
-        all_rows = logcontroller.get_rows_between(start, end)
+    print event_type
+    if start != 0 or end != 0 :
+        all_rows = logcontroller.get_rows_between(start, end, event_type)
     else:
-        all_rows = logcontroller.get_all_rows();
+        all_rows = logcontroller.get_all_rows(event_type);
     return jsonify('event_logs', all_rows)
 
 
