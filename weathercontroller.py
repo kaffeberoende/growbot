@@ -1,5 +1,5 @@
 # Gets weather data from SMHI
-import requests, json, datetime
+import requests, json, datetime, logcontroller
 
 # parameter 1 = lufttemperatur varje timme
 # Lund 53430
@@ -12,14 +12,15 @@ headers = {
     'Cache-Control': "no-cache",
     }
 
+weather = "weather"
+
 
 def get_current_temp():
     response = requests.request("GET", base_url + rest_url, headers=headers)
-   # print(response.text)
     parsed_response = json.loads(response.text)
     values = parsed_response["value"]
-
+    readable = [parsed_response["station"]["name"], values[-1]["value"],
+                datetime.datetime.fromtimestamp(values[-1]["date"]/1000)]
+    logcontroller.append_row(weather, readable)
     # TODO parse latest temperature, or perhaps average?
-    return [parsed_response["station"]["name"],
-            values[-1]["value"],
-            datetime.datetime.fromtimestamp(values[-1]["date"]/1000)]
+    return readable

@@ -1,4 +1,4 @@
-import pifaceio, time
+import pifaceio, time, logcontroller, datetime
 
 # input 0 - 5 are connected to soil moisture sensors
 moisture_sensor_list = [0, 1, 2, 3, 4, 5]
@@ -9,6 +9,12 @@ pump_list = [0, 1]
 
 pf = pifaceio.PiFace()
 
+moisture = "moisture"
+wet = "wet"
+dry = "dry"
+pumped = "pumped"
+
+
 # get the readings from all connected moisture sensors
 def get_moisture_readings():
     state = []
@@ -17,13 +23,15 @@ def get_moisture_readings():
     pf.write()
     pf.read()
     for sensor in moisture_sensor_list:
-        state.append(pf.read_pin(sensor))
+        state.append(wet if pf.read_pin(sensor) else dry)
         print("reading sensor ", sensor)
         print("general state: ", pf.read())
     # disable sensors when done
     pf.write_pin(enable_sensors, 0)
     pf.write()
-    return state;
+    logcontroller.append_row(moisture, state)
+    return state
+
 
 # run the pumps in sequence
 def pump_all():
@@ -35,4 +43,5 @@ def pump_all():
         print ("stopping ")
         pf.write_pin(pump, 0)
         pf.write()
+        logcontroller.append_row(pumped,  pump)
     return
