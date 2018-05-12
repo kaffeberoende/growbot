@@ -41,5 +41,14 @@ def pump(pump_id):
     return Response() if result == 1 else Response("No such pump", 400)
 
 
+@app.route('/growbot/api/update/', methods=['POST'])
+def update():
+    data = request.get_json(force=True)
+    print "getting update request with data " + str(data)
+    # TODO use data to decide action...
+    iocontroller.get_moisture_readings()
+    return Response()
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

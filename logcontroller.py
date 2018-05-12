@@ -27,15 +27,10 @@ def get_rows_between(start, end, event_type, limit):
     logs = open(filename, "r")
     selected_logs = []
     for log in reversed(list(logs)):
-        print "log: " + log
-        print "split: " + log.split()[0]
         timestamp = float(log.split()[0])
         et = log.split()[1]
         # TODO parse out row content as object to make prettier json?
         print et
         if float(start) <= timestamp <= float(end) and (event_type is None or event_type == et) and len(selected_logs) < limit:
             selected_logs.append(log)
-            print "adding log " + str(timestamp)
-        else :
-            print "skipping log " + str(timestamp)
     return selected_logs
