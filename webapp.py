@@ -30,6 +30,21 @@ def get_logs():
     return jsonify('event_logs', all_rows)
 
 
+@app.route('/growbot/api/plants', methods=['GET'])
+def get_plants():
+    start = request.args.get('start', 0, type=int)
+    end = request.args.get('end', 0, type=int)
+    limit = request.args.get("limit", 1000, type=int)
+    if start != 0 or end != 0 :
+        all_rows = logcontroller.get_plants_between(start, end, limit)
+    else:
+        all_rows = logcontroller.get_all_plants(limit)
+
+    timestamp = all_rows.pop(0)
+    print timestamp
+    return jsonify('plants: ' +str(timestamp), all_rows)
+
+
 @app.route('/growbot/api/pump/', defaults={'pump_id': None}, methods=['POST'])
 @app.route('/growbot/api/pump/<pump_id>', methods=['POST'])
 def pump(pump_id):

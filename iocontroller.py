@@ -3,7 +3,7 @@ import pifaceio, time, logcontroller, datetime
 # input 0 - 5 are connected to soil moisture sensors
 moisture_sensor_list = [0, 1, 2, 3, 4, 5]
 # output 2 is providing grounding to moisture sensors only when needed
-enable_sensors = 2;
+enable_sensors = 2
 # output 0 and 1 are connected in parallel to the relays feeding the pumps
 pump_list = [0, 1]
 
@@ -23,13 +23,14 @@ def get_moisture_readings():
     pf.write()
     pf.read()
     for sensor in moisture_sensor_list:
-        state.append(wet if pf.read_pin(sensor) else dry)
+        sensor_state = wet if pf.read_pin(sensor) else dry
+        state.append(sensor_state)
         print("reading sensor ", sensor)
         print("general state: ", pf.read())
+        logcontroller.store_moisture(sensor, sensor_state)
     # disable sensors when done
     pf.write_pin(enable_sensors, 0)
     pf.write()
-    logcontroller.append_row(moisture, state)
     return state
 
 
@@ -39,26 +40,20 @@ def pump(pump_id):
     if pump_id_int in pump_list:
         pf.write_pin(pump_id_int, 1)
         pf.write()
-        print ("pumping " + pump_id)
+        print ("pumping " + str(pump_id))
         time.sleep(3)
-        print ("stopping " + pump_id)
+        print ("stopping " + str(pump_id))
         pf.write_pin(pump_id_int, 0)
         pf.write()
-        logcontroller.append_row(pumped,  pump_id_int)
+        logcontroller.store_pump_event(pump_id_int, pumped)
         return 1
     else:
-        print "No pump with id: " + pump_id
+        print "No pump with id: " + str(pump_id)
         return -1
+
 
 # run the pumps in sequence
 def pump_all():
-    for pump in pump_list:
-        pf.write_pin(pump, 1)
-        pf.write()
-        print ("pumping " + str(pump))
-        time.sleep(3)
-        print ("stopping " + str(pump))
-        pf.write_pin(pump, 0)
-        pf.write()
-        logcontroller.append_row(pumped,  pump)
+    for pumpen in pump_list:
+        pump(pumpen)
     return
